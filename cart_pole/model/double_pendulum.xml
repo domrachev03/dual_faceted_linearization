@@ -1,0 +1,26 @@
+<mujoco model="double_pendulum">
+  <visual>
+    <global offheight="1200"/>
+  </visual>
+  <compiler angle="radian"/>
+  <statistic meansize="0.33033" extent="1.05" center="0 0 0.625"/>
+  <worldbody>
+    <light pos="0 0 .6"/>
+    <camera name="closeup" pos="0 -1.0 2.0" xyaxes="1 0 0 0 1 2"/>
+    <body name="base_link" pos="0 0 1.1">
+      <joint name="j1" pos="0 0 0" axis="0 1 0" range="-3.14159 3.14159"/>
+      <geom size="0.05"/>
+      <geom size="0.02 0.2" pos="0 0 -0.25" type="cylinder"/>
+      <body name="first_weight" pos="0 0 -0.5">
+        <joint name="j2" pos="0 0 0" axis="0 1 0" range="-3.14159 3.14159"/>
+        <geom size="0.05"/>
+        <geom size="0.02 0.2" pos="0 0 -0.25" type="cylinder"/>
+        <geom size="0.05" pos="0 0 -0.45"/>
+      </body>
+    </body>
+  </worldbody>
+  <actuator>
+    <general name="motor1" joint="j1" />
+    <general name="motor2" joint="j2" />
+  </actuator>
+</mujoco>
