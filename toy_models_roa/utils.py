@@ -1,8 +1,10 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
+
 def phase_portrait(
     f,
+    ax=None,
     x_range=[1, 1],
     cmap='gray',
     contour=False,
@@ -11,7 +13,9 @@ def phase_portrait(
     density=0.95,
     draw_grid=False,
 ):
-
+    if ax is None:
+        _, ax = plt.subplots()
+    
     x1_max, x2_max = x_range
     x1_span = np.arange(-1.1*x1_max, 1.1*x1_max, 0.1)
     x2_span = np.arange(-1.1*x2_max, 1.1*x2_max, 0.1)
@@ -30,25 +34,22 @@ def phase_portrait(
     lw = 0.8*(2*dist + dist.max()) / dist.max()
 
     # figure(figsize=size)
-    plt.title('Phase Portrait')
+    ax.set_title('Phase Portrait')
 
     if contour:
-        plt.contourf(x1_span, x2_span, dist, cmap=cmap, alpha=0.15)
+        ax.contourf(x1_span, x2_span, dist, cmap=cmap, alpha=0.15)
 
-    plt.streamplot(x1_span, x2_span, dx1, dx2, arrowsize=1.2,   density=density, color=dist,
-               cmap=cmap, linewidth=lw, arrowstyle='->')  # ,color=L, cmap='autumn', linewidth = lw)
+    ax.streamplot(x1_span, x2_span, dx1, dx2, arrowsize=1.2,   density=density, color=dist, cmap=cmap, linewidth=lw, arrowstyle='->')  # ,color=L, cmap='autumn', linewidth = lw)
 
-    plt.xlabel(r'State  $x_1$')
-    plt.ylabel(r'State  $x_2$')
+    ax.set_xlabel(r'State  $x_1$')
+    ax.set_ylabel(r'State  $x_2$')
 
-    plt.xlim([-x1_max, x1_max])
-    plt.ylim([-x2_max, x2_max])
+    ax.set_xlim([-x1_max, x1_max])
+    ax.set_ylim([-x2_max, x2_max])
     if draw_grid:
-        plt.grid(color='black', linestyle='--', linewidth=1.0, alpha=0.3)
-        plt.grid(True)
-    plt.tight_layout()
-    # show()
-
+        ax.set_grid(color='black', linestyle='--', linewidth=1.0, alpha=0.3)
+        ax.set_grid(True)
+    
     return None
 
 
@@ -57,12 +58,16 @@ def elipse(x, P, r):
 
 
 def draw_elipse(
-    x_bounds=[-4, 4], 
+    x_bounds=[-4, 4],
+    ax=None,  
     f=elipse,
     cs_func=False,
     args=tuple(),
     plt_args=dict()
 ):
+    if ax is None:
+        fig, ax = plt.subplots()
+
     x_min, x_max = x_bounds
     delta = 0.025
     x1range = np.arange(x_min, x_max, delta)
@@ -78,7 +83,7 @@ def draw_elipse(
             [f(X[:, i, k], *args) for k in range(len(x2range))] for i in range(len(x1range))
         ])[:, :, 0, 0]
     
-    plt.contour(X1, X2, ROA, [0], **plt_args)
+    ax.contour(X1, X2, ROA, [0], **plt_args)
 
 
 def sampling_roa(f, V, nablaV, x_bounds, N=100):
@@ -91,7 +96,7 @@ def sampling_roa(f, V, nablaV, x_bounds, N=100):
 
     for i in range(N):
         x_i = x_min + x_range*np.random.rand(n)
-        dV_i = np.array(nablaV(x_i))@ np.array(f(x_i))
+        dV_i = np.array(nablaV(x_i)) @ np.array(f(x_i))
         V_i = V(x_i)
         if dV_i >= 0 and V_i <= c:
             c = V_i
