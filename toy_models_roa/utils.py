@@ -86,7 +86,7 @@ def draw_elipse(
     ax.contour(X1, X2, ROA, [0], **plt_args)
 
 
-def sampling_roa(f, V, nablaV, x_bounds, N=100):
+def sampling_roa(f, V, dV, x_bounds, N=100):
     x_min, x_max = x_bounds
     x_range = np.array(x_max) - np.array(x_min)
     n = np.shape(x_min)[0]
@@ -96,10 +96,12 @@ def sampling_roa(f, V, nablaV, x_bounds, N=100):
 
     for i in range(N):
         x_i = x_min + x_range*np.random.rand(n)
-        dV_i = np.array(nablaV(x_i)) @ np.array(f(x_i))
+        dV_i = dV(x_i)
         V_i = V(x_i)
+        if V_i < 0:
+            continue
         if dV_i >= 0 and V_i <= c:
             c = V_i
             ct.append(c)  
     
-    return c, ct
+    return c, np.array(ct)

@@ -1,0 +1,16 @@
+name: base
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pip
+  - ipykernel
+  - numpy=1.23.*
+  - quaternion
+  - pip:
+      - cmeel_casadi_kin_dyn
+      - cvxpy
+      - cvxpygen
+      - matplotlib
+      - darli
+      - 
